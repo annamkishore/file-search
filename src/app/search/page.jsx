@@ -9,10 +9,14 @@ export default function Home1() {
     let runCommand = () => {
         let url = `http://localhost:3000/api/search?q=${query}`
         console.log(url)
-        fetch(url).then(val => val.json()).then(val => {
-            console.log(val)
-            let array = eval(val.value)
-            setResult(array.join("\n"))
+        fetch(url).then(response => response.json()).then(response => {
+            console.log(response)
+            if(response.error) {
+                setResult(JSON.stringify(response.error))
+            }else {
+                let array = response.result
+                setResult(array.join("\n"))
+            }
         })
     }
 
@@ -25,10 +29,14 @@ export default function Home1() {
 
     return <>
         <div>
-            Search/Command <input onKeyDown={onEnter}/> <br/>
-            Entered: {query} <br/>
-            Result:
-            <textarea value={result} rows={30} cols={70} style={{lineHeight: "1.5"}}></textarea>
+            Search <br />
+            <input style={{marginLeft: "5rem"}} size={70} onKeyDown={onEnter} /> <br/>
+            Result: <br/>
+            <textarea
+              value={result} rows={30} cols={70} spellCheck={"false"}
+              onChange={()=>{}}
+              style={{lineHeight: "1.5", marginLeft: "5rem"}}>
+            </textarea>
         </div>
     </>
 }

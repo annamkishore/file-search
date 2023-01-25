@@ -10,7 +10,7 @@ async function print(dir) {
   search = {
     dir_test: "/media/kishore/Work/__git/my-work-docs/cncf",
     dir,
-    ignoreDirs: ["node_modules", ".next", ".git", ".idea"]
+    ignoreDirs: ["node_modules", ".next", ".git", ".idea", "output", "vendor", "resources"]
   }
   result = []
   return await listFiles(search.dir)
@@ -31,8 +31,8 @@ async function listFiles(dir) {
       const ignore = search.ignoreDirs.includes(file.name)
 
       // 3. file - print it
-      let temp = `${space(count)} ${i + 1} ${file.name} ${ignore ? " (ignored..)" : ""}`;
-      console.log(temp)
+      let size = `(${(file.stat.size/1024).toFixed(1)} kb)`
+      let temp = `${space(count)} ${i + 1} ${file.name} ${isDir ? "" : size} ${ignore ? " (ignored..)" : ""}`;
       result.push(temp)
 
       if(ignore){
@@ -50,7 +50,7 @@ async function listFiles(dir) {
     return result
   } catch (err) {
     console.error("Error Reading dir: ", err)
-    return err
+    throw err
   }
 }
 

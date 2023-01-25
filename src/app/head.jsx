@@ -1,7 +1,7 @@
 export default function Head() {
   return (
     <>
-      <title> Jai </title>
+      <title> Krishna's Search </title>
     </>
   )
 }
