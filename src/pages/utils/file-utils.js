@@ -4,6 +4,7 @@ let space = count => Array(2 * count).fill("-").join("")
 
 let search = {}
 let count = 1
+let result = []
 
 async function print(dir) {
   search = {
@@ -11,9 +12,10 @@ async function print(dir) {
     dir,
     ignoreDirs: ["node_modules", ".next", ".git", ".idea"]
   }
-
+  result = []
   return await listFiles(search.dir)
 }
+
 async function listFiles(dir) {
   try {
     let list = await fs.readdir(dir)
@@ -26,12 +28,16 @@ async function listFiles(dir) {
       let isDir = file.stat.isDirectory(file.name)
 
       // 2. ignore these file/directorie(s)
-      if(search.ignoreDirs.includes(file.name)){
-        continue;
-      }
+      const ignore = search.ignoreDirs.includes(file.name)
 
       // 3. file - print it
-      console.log(space(count), i + 1, file.name)
+      let temp = `${space(count)} ${i + 1} ${file.name} ${ignore ? " (ignored..)" : ""}`;
+      console.log(temp)
+      result.push(temp)
+
+      if(ignore){
+        continue;
+      }
 
       // 4. dir - traverse it
       if (isDir) {
@@ -40,6 +46,8 @@ async function listFiles(dir) {
         count--
       }
     }
+
+    return result
   } catch (err) {
     console.error("Error Reading dir: ", err)
     return err
